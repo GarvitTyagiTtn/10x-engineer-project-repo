@@ -128,6 +128,23 @@ class TestPrompts:
         # Newest (Second) should be first
         assert prompts[0]["title"] == "Second"  # Will fail until Bug #3 fixed
 
+    def test_patch_prompt_partial_update(self, client: TestClient, sample_prompt_data):
+        # Create prompt
+        post_resp = client.post("/prompts", json=sample_prompt_data)
+        prompt_id = post_resp.json()["id"]
+        original_timestamp = post_resp.json()["updated_at"]
+        
+        # Patch only title
+        patch_data = {"title": "Updated Title Only"}
+        patch_resp = client.patch(f"/prompts/{prompt_id}", json=patch_data)
+        assert patch_resp.status_code == 200
+        
+        patched = patch_resp.json()
+        assert patched["title"] == "Updated Title Only"
+        assert patched["content"] == sample_prompt_data["content"]  # unchanged
+        assert patched["description"] == sample_prompt_data["description"]  # unchanged
+        assert patched["updated_at"] != original_timestamp  # timestamp updated
+
 
 class TestCollections:
     """Tests for collection endpoints."""
@@ -175,5 +192,38 @@ class TestCollections:
         prompts = client.get("/prompts").json()["prompts"]
         if prompts:
             # Prompt exists with orphaned collection_id
-            assert prompts[0]["collection_id"] == collection_id
+            assert len(prompts) == 1
+            assert prompts[0]["id"] == prompt_id
+            assert prompts[0]["collection_id"] is None
             # After fix, collection_id should be None or prompt should be deleted
+
+    def test_delete_collection_clears_prompt_collection_id(self, client: TestClient):
+        # create collection
+        resp = client.post("/collections", json={"name": "col-a", "description": "desc"})
+        assert resp.status_code == 201
+        col = resp.json()
+        col_id = col["id"]
+
+        # create prompt tied to collection
+        prompt_payload = {
+            "title": "Test Prompt",
+            "content": "This is valid content for testing.",
+            "description": "desc",
+            "collection_id": col_id
+        }
+        r2 = client.post("/prompts", json=prompt_payload)
+        assert r2.status_code == 201
+        prompt = r2.json()
+        assert prompt["collection_id"] == col_id
+
+        # delete collection
+        r3 = client.delete(f"/collections/{col_id}")
+        assert r3.status_code == 204
+
+        # fetch prompt and ensure collection_id was cleared
+        r4 = client.get(f"/prompts/{prompt['id']}")
+        assert r4.status_code == 200
+        updated_prompt = r4.json()
+        assert updated_prompt["collection_id"] is None
+
+

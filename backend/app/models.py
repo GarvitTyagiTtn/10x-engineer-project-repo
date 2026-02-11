@@ -39,6 +39,13 @@ class Prompt(PromptBase):
     class Config:
         from_attributes = True
 
+class PromptUpdate(BaseModel):
+    """Partial update model - all fields optional"""
+    title: Optional[str] = None
+    content: Optional[str] = None
+    description: Optional[str] = None
+    collection_id: Optional[str] = None
+
 
 # ============== Collection Models ==============
 
