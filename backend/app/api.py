@@ -15,6 +15,7 @@ from app.utils import (
     sort_prompts_by_date,
     filter_prompts_by_collection,
     search_prompts,
+    filter_prompts_by_tags,
 )
 from app import __version__
 
@@ -105,12 +106,14 @@ def health_check() -> HealthResponse:
 def list_prompts(
     collection_id: Optional[str] = None,
     search: Optional[str] = None,
+    tags: Optional[str] = None,
 ) -> PromptList:
-    """Retrieve a list of prompts, with optional filtering by collection, search query.
+    """Retrieve a list of prompts, with optional filtering by collection, search query, or tags.
 
     Args:
         collection_id (Optional[str]): The ID of the collection to filter prompts by.
         search (Optional[str]): The search query to filter prompts by matching titles.
+        tags (Optional[str]): Comma-separated tags to filter by (all must match).
 
     Returns:
         PromptList: A list of prompts and the total count.
@@ -119,6 +122,9 @@ def list_prompts(
 
     if collection_id:
         prompts = filter_prompts_by_collection(prompts, collection_id)
+    if tags:
+        tag_list = [t.strip() for t in tags.split(",") if t.strip()]
+        prompts = filter_prompts_by_tags(prompts, tag_list)
     if search:
         prompts = search_prompts(prompts, search)
 
@@ -183,6 +189,7 @@ def update_prompt(prompt_id: str, prompt_data: PromptUpdate) -> Prompt:
         content=prompt_data.content,
         description=prompt_data.description,
         collection_id=prompt_data.collection_id,
+        tags=prompt_data.tags,
         created_at=existing.created_at,
         updated_at=get_current_time(),
     )
@@ -225,6 +232,27 @@ def delete_prompt(prompt_id: str) -> None:
     """
     if not storage.delete_prompt(prompt_id):
         raise HTTPException(status_code=404, detail="Prompt not found")
+
+
+@app.put("/prompts/{prompt_id}/tags", response_model=Prompt)
+def set_prompt_tags(prompt_id: str, tags: List[str]) -> Prompt:
+    """Add or replace tags for a specific prompt.
+
+    Args:
+        prompt_id (str): The unique identifier of the prompt.
+        tags (List[str]): The new list of tags.
+
+    Returns:
+        Prompt: The updated prompt with new tags.
+
+    Raises:
+        HTTPException: 404 if the prompt is not found.
+    """
+    existing = _get_prompt_or_404(prompt_id)
+    existing.tags = tags
+    existing.updated_at = get_current_time()
+    return storage.update_prompt(prompt_id, existing)
+
 
 # ============== Collection Endpoints ==============
 
