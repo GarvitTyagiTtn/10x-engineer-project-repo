@@ -1,0 +1,38 @@
+.list {
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.info {
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.name {
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.desc {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.empty {
+  color: #64748b;
+  text-align: center;
+  padding: 2rem;
+  font-size: 0.9rem;
+}

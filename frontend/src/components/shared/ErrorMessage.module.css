@@ -1,0 +1,13 @@
+.container {
+  padding: 1rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.message {
+  color: #dc2626;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+}

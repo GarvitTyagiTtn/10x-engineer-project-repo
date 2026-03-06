@@ -1,0 +1,175 @@
+.sidebar {
+  background: #1e293b;
+  color: #e2e8f0;
+  padding: 0.75rem 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.list {
+  list-style: none;
+  flex: 1;
+}
+
+/* Top-level nav item (All Prompts) */
+.item {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  color: #e2e8f0;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.item:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: -2px;
+}
+
+.active {
+  background: #6366f1;
+}
+
+.active:hover {
+  background: #6366f1;
+}
+
+/* Collections section header */
+.sectionHeader {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  color: #94a3b8;
+  padding: 0.6rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.sectionHeader:hover {
+  color: #e2e8f0;
+}
+
+.activeSection {
+  color: #e2e8f0;
+  background: #6366f1;
+}
+
+.activeSection:hover {
+  background: #6366f1;
+}
+
+.sectionHeader:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: -2px;
+}
+
+.sectionLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.chevron {
+  display: inline-block;
+  transition: transform 0.15s ease;
+  font-size: 0.85rem;
+}
+
+.chevronOpen {
+  transform: rotate(90deg);
+}
+
+.addBtn {
+  font-size: 1rem;
+  color: #94a3b8;
+  padding: 0 0.25rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.addBtn:hover {
+  color: #e2e8f0;
+}
+
+.addBtn:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+}
+
+/* Nested collection items */
+.subList {
+  list-style: none;
+}
+
+.subItem {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  color: #e2e8f0;
+  padding: 0.4rem 1rem 0.4rem 2rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.subItem:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.subItem:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: -2px;
+}
+
+.itemName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.deleteBtn {
+  display: none;
+  font-size: 1rem;
+  color: #94a3b8;
+  padding: 0 0.25rem;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.deleteBtn:hover {
+  color: #ef4444;
+}
+
+.subItem:hover .deleteBtn {
+  display: inline;
+}
+
+.emptyMsg {
+  padding: 0.4rem 1rem 0.4rem 2rem;
+  font-size: 0.8rem;
+  color: #64748b;
+  font-style: italic;
+}
